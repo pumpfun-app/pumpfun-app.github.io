@@ -1,0 +1,26 @@
+# Pumpfun App — pump.fun Solana Memecoin Reference
+
+> How pump.fun works on Solana — launching and trading memecoins on bonding curves, migration to a DEX, fees, and the real risks. Independent, not affiliated with pump.fun.
+
+## Key Facts
+- pump.fun: a Solana platform for launching and trading memecoins on bonding curves
+- Bonding curve: price is set by a formula that rises as supply is bought and falls as it is sold; no presale, no order book
+- Migration: at a set market-cap threshold, liquidity migrates to a decentralized exchange
+- Custody: non-custodial — every buy/sell is a signed Solana transaction; you hold your keys
+- Costs: Solana network fees + platform trading fee on each trade; small SOL fee to create a token
+- HIGH RISK: memecoins are extremely volatile and speculative; most lose most/all value; rug pulls and scams are common; no guaranteed gains
+- Connecting a wallet never grants free tokens — "claim free tokens" offers are scams
+- Independent resource — NOT affiliated with or endorsed by pump.fun
+
+## Internal Sections & App Navigation
+- [What is pump.fun?](#what)
+- [Bonding curves explained](#curve)
+- [Launching a token](#launch)
+- [Buying & selling](#trade)
+- [Fees & costs](#fees)
+- [Risks & scams](#risks)
+- [FAQ](#faq)
+- [Open Pumpfun App](dashboard/index.html)
+
+## Disclaimer
+Independent page. Not affiliated with or endorsed by pump.fun. Memecoins are extremely risky and most lose value. Not financial advice.

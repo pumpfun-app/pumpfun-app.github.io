@@ -1,0 +1,12 @@
+{
+  "name": "Pumpfun App",
+  "short_name": "Pumpfun App",
+  "description": "How pump.fun works on Solana — launching and trading memecoins on bonding curves. Extremely risky. Not affiliated with pump.fun.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "en",
+  "background_color": "#0a0e14",
+  "theme_color": "#0a0e14",
+  "icons": [{ "src": "sol.png", "sizes": "any", "type": "image/png", "purpose": "any" }]
+}
