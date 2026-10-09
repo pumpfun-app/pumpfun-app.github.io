@@ -1,375 +1,1310 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>Pumpfun App — Launch &amp; Trade Solana Memecoins on Bonding Curves</title>
-<meta content="Pumpfun App: how pump.fun works on Solana — launching and trading memecoins through bonding curves, migration to a DEX, fees, and the real risks. Independent, not affiliated with pump.fun." name="description"/>
-<meta content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" name="robots"/>
-<meta content="#0a0e14" name="theme-color"/>
-<link href="https://pumpfun-app.github.io/" rel="canonical"/>
-<link href="sol.png" rel="icon" type="image/png"/>
-<link href="sol.png" rel="apple-touch-icon"/>
-<link href="manifest.webmanifest" rel="manifest"/>
-<link href="sol.png" rel="image_src"/>
-<link crossorigin="" href="https://api.coingecko.com" rel="preconnect"/>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pump.fun — How Solana's Memecoin Launchpad Works</title>
+<meta name="description" content="A plain guide to Pump.fun: how its bonding-curve pricing sets the price, what triggers graduation to a DEX, what it costs to launch or trade, and the real risks — rug pulls, snipers and volatility.">
+<link rel="canonical" href="https://pumpfun-app.github.io/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Pump.fun">
+<meta property="og:url" content="https://pumpfun-app.github.io/">
+<meta property="og:image" content="https://pumpfun-app.github.io/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pump.fun">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600;700&family=Albert+Sans:wght@500;600;700&display=swap">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "WebSite", "@id": "https://pumpfun-app.github.io/#website", "url": "https://pumpfun-app.github.io/", "name": "Pump.fun — How Solana's Memecoin Launchpad Works"}, {"@type": "WebPage", "@id": "https://pumpfun-app.github.io/#webpage", "url": "https://pumpfun-app.github.io/", "name": "Pump.fun — How Solana's Memecoin Launchpad Works", "isPartOf": {"@id": "https://pumpfun-app.github.io/#website"}, "description": "A plain guide to Pump.fun: how its bonding-curve pricing sets the price, what triggers graduation to a DEX, what it costs to launch or trade, and the real risks — rug pulls, snipers and volatility.", "datePublished": "2026-10-09", "dateModified": "2026-10-09"}, {"@type": "SoftwareApplication", "name": "Pump.fun", "applicationCategory": "FinanceApplication", "operatingSystem": "Web", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"}}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://pumpfun-app.github.io/"}, {"@type": "ListItem", "position": 2, "name": "Trading bots"}, {"@type": "ListItem", "position": 3, "name": "Pump.fun"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is Pump.fun in simple terms?", "acceptedAnswer": {"@type": "Answer", "text": "Pump.fun is a Solana platform where anyone can create a tradable token in seconds. Each new token starts on an automated bonding curve that sets its buy and sell price by formula, with no presale and no coding required."}}, {"@type": "Question", "name": "How does the Pump.fun bonding curve set the price?", "acceptedAnswer": {"@type": "Answer", "text": "The curve holds a SOL reserve and mints tokens against it mathematically: every buy moves up the curve and raises the price for the next buyer, and every sell moves back down it. The contract itself is always the counterparty, so there is always a price available."}}, {"@type": "Question", "name": "What does it mean when a Pump.fun token graduates?", "acceptedAnswer": {"@type": "Answer", "text": "Graduation happens when a token's bonding-curve market cap crosses a set threshold. The curve locks, its accumulated liquidity moves to a Solana DEX such as Raydium, and the token then trades against that pool instead of against the platform's formula."}}, {"@type": "Question", "name": "Is Pump.fun free to use?", "acceptedAnswer": {"@type": "Answer", "text": "Launching a token costs only the Solana network fee to deploy the contract, which is typically a fraction of a cent. Trading on the curve carries a small percentage fee, and another fee is taken when a token graduates and its liquidity migrates to a DEX."}}, {"@type": "Question", "name": "What is a rug pull on Pump.fun?", "acceptedAnswer": {"@type": "Answer", "text": "A rug pull is when a creator who holds a large share of a token's cheap early supply sells it all at once, collapsing the price for later buyers. The risk is highest before graduation and drops sharply afterward, since graduated liquidity is typically locked."}}, {"@type": "Question", "name": "Why do bots snipe new Pump.fun launches?", "acceptedAnswer": {"@type": "Answer", "text": "Sniping bots watch for new token deployments and buy within the first block or seconds of launch, aiming to capture the cheapest supply on the bonding curve before human traders can react. It is a known pattern on fast, permissionless launchpads."}}, {"@type": "Question", "name": "Does every token on Pump.fun graduate to a DEX?", "acceptedAnswer": {"@type": "Answer", "text": "No. Only a small fraction of tokens created ever reach the market-cap threshold needed to graduate. Most sit on the bonding curve with thin trading volume and eventually stop trading entirely rather than migrating anywhere."}}]}]}</script>
 <style>
-:root {
-  color-scheme: dark;
-  --bg: #0a0e14;
-  --surface: #10161f; --panel: #131b26; --raised: #1a232f; --raised-2: #212c3a;
-  --line: rgba(255,255,255,.09); --line-2: rgba(255,255,255,.17);
-  --ink: #f3f7fc; --text: #c4cdd9; --muted: #8b97a6; --faint: #6b7686;
-  --accent: #34d399; --accent-2: #10b981; --accent-3: #6ee7b7;
-  --accent-soft: rgba(52,211,153,.12); --accent-line: rgba(52,211,153,.35); --accent-glow: rgba(52,211,153,.45);
-  --warn: #f59e0b; --warn-soft: rgba(245,158,11,.10); --warn-line: rgba(245,158,11,.45);
-  --cta: #34d399; --cta-2: #10b981; --cta-ink: #04140a;
-  --r-sm: 10px; --r-md: 14px; --r-lg: 16px; --r-xl: 22px;
-  --mono: ui-monospace, "SF Mono", SFMono-Regular, "Roboto Mono", Menlo, Consolas, monospace;
-  --font: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --ease: cubic-bezier(0.22, 0.7, 0.24, 1);
+:root{--bg:#FBFAF7;--surface:#FFFFFF;--text:#1A1608;--muted:#6B6248;--accent:#16A34A;--accent-ink:#FFFFFF;--radius:16px;--display:"Albert Sans";--body:"Albert Sans"}
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-body { margin: 0; min-width: 320px; overflow-x: hidden; color: var(--text); background: var(--bg); background-image: radial-gradient(1100px 620px at 80% -8%, rgba(52,211,153,.10), transparent 60%), radial-gradient(900px 500px at 8% 4%, rgba(22,163,74,.06), transparent 55%); background-attachment: fixed; font-family: var(--font); font-size: 15px; line-height: 1.6; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
-a { color: inherit; text-decoration: none; }
-img { display: block; max-width: 100%; }
-:focus-visible { outline: 2px solid var(--accent-3); outline-offset: 3px; border-radius: 10px; }
-.skip { position: absolute; left: -999px; }
-.skip:focus { left: 12px; top: 12px; z-index: 99; padding: 10px 16px; border-radius: 10px; background: var(--accent); color: var(--cta-ink); font-weight: 800; }
-.topbar { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; padding: 12px clamp(16px, 4vw, 30px); background: rgba(10,14,20,.72); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px) saturate(140%); -webkit-backdrop-filter: blur(12px) saturate(140%); }
-.topbar-left { display: flex; align-items: center; gap: 12px; min-width: 0; }
-.topbar-logo { width: 40px; height: 40px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 11px; background: var(--raised); box-shadow: inset 0 0 0 1px var(--line-2); }
-.topbar-logo img { width: 24px; height: 24px; border-radius: 7px; }
-h1.wordmark { margin: 0; font-size: 18px; font-weight: 850; letter-spacing: -0.03em; color: var(--ink); line-height: 1; white-space: nowrap; }
-.wordmark .tld { color: var(--accent-3); }
-.topbar-right { display: flex; align-items: center; gap: 10px 18px; flex-wrap: wrap; }
-.ticker { display: flex; align-items: center; flex-wrap: wrap; gap: 3px 16px; min-width: 0; }
-.tick { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; color: var(--faint); font-size: 11.5px; font-weight: 600; }
-.tick b { color: var(--muted); font-family: var(--mono); font-size: 12px; font-weight: 600; }
-.tick .ext { color: var(--faint); font-size: 10px; }
-.tick:hover { color: var(--muted); } .tick:hover b, .tick:hover .ext { color: var(--accent-3); }
-.nav-cta { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 18px; border-radius: 12px; background: var(--accent); color: var(--cta-ink); font-size: 13.5px; font-weight: 800; box-shadow: 0 6px 18px -6px var(--accent-glow); transition: transform .16s var(--ease), box-shadow .16s var(--ease), filter .16s var(--ease); }
-.nav-cta:hover { transform: translateY(-1px); filter: brightness(1.05); box-shadow: 0 12px 28px -8px var(--accent-glow); }
-.hero { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: clamp(28px, 4vw, 56px); align-items: center; width: min(1160px, 100%); margin: 0 auto; padding: clamp(34px, 7vh, 84px) clamp(16px, 4vw, 30px) clamp(30px, 5vh, 60px); }
-.hero-l { min-width: 0; }
-.eyebrow { display: inline-flex; align-items: center; gap: 8px; padding: 7px 13px; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--accent-soft); color: var(--accent-3); font-size: 12px; font-weight: 750; }
-.eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-3); box-shadow: 0 0 0 4px var(--accent-soft); animation: pulse 2.4s var(--ease) infinite; }
-@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
-@media (prefers-reduced-motion: reduce){ .eyebrow .dot{animation:none} }
-.hero-h { margin: 18px 0 0; font-size: clamp(2.15rem, 5.3vw, 3.7rem); line-height: 1.04; font-weight: 850; letter-spacing: -0.035em; color: var(--ink); }
-.hero-h .grad { background: linear-gradient(100deg, var(--accent-3), #a7f3d0 55%, var(--accent)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; }
-.hero-lead { margin: 18px 0 0; max-width: 50ch; font-size: 16.5px; line-height: 1.6; color: var(--text); }
-.hero-lead strong { color: var(--ink); font-weight: 700; }
-.hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 0; }
-.btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; border-radius: 14px; font-weight: 800; font-size: 15.5px; cursor: pointer; border: 0; transition: transform .16s var(--ease), box-shadow .16s var(--ease), filter .16s var(--ease), border-color .16s var(--ease); }
-.btn-primary { padding: 0 26px; color: var(--cta-ink); background: linear-gradient(135deg, var(--accent-3), var(--accent) 55%, var(--accent-2)); box-shadow: 0 12px 30px -8px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.35); }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 20px 46px -10px var(--accent-glow); filter: brightness(1.04); }
-.btn-primary .go { transition: transform .18s var(--ease); }
-.btn-primary:hover .go { transform: translate(2px,-2px); }
-.btn-ghost { padding: 0 22px; color: var(--ink); background: rgba(255,255,255,.03); border: 1px solid var(--line-2); }
-.btn-ghost:hover { border-color: var(--accent-line); color: var(--accent-3); }
-.trust { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 26px 0 0; }
-.trust-badge { display: flex; align-items: center; gap: 10px; padding: 12px 13px; border: 1px solid var(--line); border-radius: var(--r-md); background: rgba(255,255,255,.02); }
-.trust-badge .tb-ico { width: 30px; height: 30px; flex: 0 0 auto; display: grid; place-items: center; border-radius: 9px; background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent-line); }
-.trust-badge .tb-ico svg { width: 16px; height: 16px; color: var(--accent-3); }
-.trust-badge b { display: block; color: var(--ink); font-size: 13px; font-weight: 750; line-height: 1.2; }
-.trust-badge span { display: block; color: var(--faint); font-size: 10.5px; font-weight: 600; margin-top: 2px; }
-@media (max-width: 720px){ .trust { grid-template-columns: 1fr 1fr; } }
-.swap-wrap { position: relative; }
-.swap-wrap::before { content:""; position:absolute; inset:-1px; border-radius: 26px; background: linear-gradient(160deg, var(--accent-line), transparent 45%); opacity:.7; z-index:0; }
-.swap-card { position: relative; z-index: 1; border: 1px solid var(--line-2); border-radius: 24px; background: linear-gradient(180deg, var(--panel), var(--surface)); padding: 18px; box-shadow: 0 40px 90px -34px rgba(0,0,0,.75); }
-.card-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding: 0 2px; }
-.card-title { margin: 0; font-size: 15px; font-weight: 800; color: var(--ink); }
-.preview-tag { display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border: 1px solid var(--accent-line); border-radius: 999px; background: var(--accent-soft); color: var(--accent-3); font-size: 10px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; }
-.preview-tag > span { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-3); box-shadow: 0 0 0 3px var(--accent-soft); }
-.leg { border: 1px solid var(--line); border-radius: 16px; background: var(--bg); padding: 14px 15px; transition: border-color .16s var(--ease); }
-.leg:hover, .leg:focus-within { border-color: var(--line-2); }
-.leg-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-.leg-cap { font-size: 12px; font-weight: 650; color: var(--muted); }
-.leg-bal { font-size: 11.5px; color: var(--faint); font-weight: 600; }
-.leg-body { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.amount { font-family: var(--mono); font-size: 1.9rem; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-.leg-body .amount.dim { color: var(--faint); }
-.asset { display: inline-flex; align-items: center; gap: 8px; flex: 0 0 auto; min-height: 44px; padding: 6px 12px 6px 6px; border: 1px solid var(--line-2); border-radius: 999px; background: var(--raised); color: var(--ink); font-size: 15px; font-weight: 800; cursor: pointer; transition: border-color .16s var(--ease), background-color .16s var(--ease); }
-.asset:hover { border-color: var(--accent-line); background: var(--raised-2); }
-.asset .tok { width: 28px; height: 28px; flex: 0 0 auto; border-radius: 50%; overflow: hidden; display: grid; place-items: center; background: #fff; box-shadow: 0 0 0 1px var(--line-2); }
-.asset .tok img { width: 28px; height: 28px; }
-.asset .chev-sm { width: 15px; height: 15px; color: var(--muted); }
-.swap-arrow { position: relative; z-index: 2; display: grid; place-items: center; width: 44px; height: 44px; margin: -14px auto; border: 4px solid var(--panel); border-radius: 14px; background: var(--raised); color: var(--accent-3); cursor: pointer; box-shadow: 0 0 0 1px var(--line-2); transition: transform 240ms var(--ease), background-color .16s var(--ease), color .16s var(--ease); }
-.swap-arrow svg { width: 18px; height: 18px; }
-.swap-arrow:hover { transform: rotate(180deg); background: var(--accent); color: var(--cta-ink); }
-.route-panel { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 13px 15px; border: 1px solid var(--line); border-radius: 14px; background: rgba(255,255,255,.02); }
-.route-info b { display: block; color: var(--ink); font-size: 13.5px; font-weight: 750; }
-.route-info span { display: block; margin-top: 2px; color: var(--faint); font-size: 11.5px; }
-.route-tok { display: inline-flex; align-items: center; gap: 7px; color: var(--text); font-size: 13px; font-weight: 700; white-space: nowrap; }
-.route-tok .tok { width: 22px; height: 22px; border-radius: 50%; overflow: hidden; background: #fff; display: grid; place-items: center; box-shadow: 0 0 0 1px var(--line-2); }
-.route-tok .tok img { width: 22px; height: 22px; }
-.route-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 4px 2px; border-top: 1px solid var(--line); margin-top: 10px; }
-.route-row span { font-size: 10.5px; font-weight: 750; letter-spacing: 0.07em; text-transform: uppercase; color: var(--faint); }
-.route-row b { color: var(--text); font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
-.swap-cta { display: flex; align-items: center; justify-content: center; gap: 9px; margin-top: 16px; min-height: 54px; border-radius: 15px; color: var(--cta-ink); background: linear-gradient(135deg, var(--accent-3), var(--accent) 55%, var(--accent-2)); font-size: 16.5px; font-weight: 850; box-shadow: 0 16px 34px -12px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,.35); transition: filter 150ms var(--ease), transform 150ms var(--ease), box-shadow .16s var(--ease); }
-.swap-cta:hover { filter: brightness(1.05); transform: translateY(-2px); box-shadow: 0 22px 50px -12px var(--accent-glow); }
-.swap-cta .cta-go { transition: transform 0.18s var(--ease); }
-.swap-cta:hover .cta-go { transform: translateX(3px); }
-.swap-foot { text-align: center; margin: 12px 2px 0; font-size: 11px; color: var(--faint); }
-@media (max-width: 900px){ .hero { grid-template-columns: 1fr; gap: 30px; } .swap-wrap { max-width: 460px; margin: 0 auto; width: 100%; } }
-.content { width: min(1160px, 100%); margin: 0 auto; padding: clamp(30px, 5vh, 60px) clamp(16px, 4vw, 30px) 80px; }
-.section-intro { max-width: 760px; margin: 0 auto clamp(22px, 4vh, 40px); }
-.section-intro p { margin: 0 0 14px; font-size: 16px; line-height: 1.7; color: var(--text); }
-.section-intro p strong { color: var(--ink); font-weight: 700; }
-.docs { display: grid; grid-template-columns: 236px minmax(0,1fr); gap: clamp(26px, 4vw, 56px); align-items: start; }
-.toc { position: sticky; top: 76px; align-self: start; max-height: calc(100dvh - 100px); overflow: auto; }
-.toc-h { margin: 0 0 10px; font-size: 10.5px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; color: var(--faint); padding-left: 13px; }
-.toc a { display: block; min-height: 34px; padding: 8px 13px; border-left: 2px solid var(--line); color: var(--muted); font-size: 13px; font-weight: 650; line-height: 1.3; transition: color .15s var(--ease), border-color .15s var(--ease); }
-.toc a:hover { color: var(--ink); }
-.toc a.active { color: var(--accent-3); border-left-color: var(--accent); font-weight: 800; }
-.doc-main { min-width: 0; }
-.sec { border: 1px solid var(--line); border-radius: 18px; background: var(--panel); margin: 0 0 14px; scroll-margin-top: 82px; box-shadow: 0 1px 3px rgba(0,0,0,.3); transition: box-shadow .24s var(--ease), border-color .24s var(--ease); }
-.sec:hover { border-color: var(--line-2); }
-.sec[open] { border-color: var(--accent-line); box-shadow: 0 20px 50px -24px rgba(52,211,153,.28); }
-.sec > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 60px; padding: clamp(16px,2.5vh,22px) clamp(16px,3vw,24px); border-radius: 18px; transition: background-color .16s var(--ease); }
-.sec > summary:hover { background: rgba(255,255,255,.03); }
-.sec > summary::-webkit-details-marker { display: none; }
-.sec > summary h2 { margin: 0; font-size: clamp(1.08rem,2.4vw,1.35rem); font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
-.chev { flex: 0 0 auto; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--line-2); background: var(--raised); color: var(--accent-3); transition: transform .28s var(--ease), background-color .2s var(--ease), border-color .2s var(--ease); }
-.chev svg { width: 18px; height: 18px; }
-.sec[open] > summary .chev { transform: rotate(180deg); background: var(--accent-soft); border-color: var(--accent-line); }
-.sec-body { padding: 0 clamp(16px,3vw,24px) clamp(18px,3vh,26px); max-width: 74ch; }
-.sec[open] .sec-body { animation: drop .22s var(--ease); }
-@keyframes drop { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce){ .sec[open] .sec-body { animation: none; } .chev { transition: none; } }
-.sec-body p { margin: 0 0 13px; color: var(--text); }
-.sec-body p:last-child { margin-bottom: 0; }
-.sec-body strong { color: var(--ink); font-weight: 700; }
-.sec-body ul { margin: 0 0 4px; padding-left: 20px; }
-.sec-body li { margin-bottom: 8px; color: var(--text); }
-.sec-body li::marker { color: var(--accent-3); }
-.sec-body a { color: var(--accent-3); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; text-decoration-color: var(--accent-line); transition: color .15s var(--ease); }
-.sec-body a:hover { color: var(--accent); }
-.addr { font-family: var(--mono); font-size: 12.5px; color: var(--accent-3); word-break: break-all; }
-.notice { border: 1px solid var(--line); border-left: 4px solid var(--warn); border-radius: 14px; background: var(--warn-soft); margin: 0 0 12px; overflow: hidden; }
-.notice > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 14px 16px; }
-.notice > summary::-webkit-details-marker { display: none; }
-.notice .n-ico { width: 26px; height: 26px; flex: 0 0 auto; display: grid; place-items: center; color: var(--warn); }
-.notice .n-ico svg { width: 20px; height: 20px; }
-.notice .n-title { flex: 1 1 auto; color: var(--ink); font-weight: 750; font-size: 14.5px; }
-.notice .chev-w { flex: 0 0 auto; width: 30px; height: 30px; display: grid; place-items: center; color: var(--warn); transition: transform .26s var(--ease); }
-.notice .chev-w svg { width: 17px; height: 17px; }
-.notice[open] .chev-w { transform: rotate(180deg); }
-.notice .n-body { padding: 0 16px 16px 54px; color: var(--text); font-size: 13.5px; line-height: 1.66; }
-.notice .n-body strong { color: var(--ink); }
-@media (max-width: 560px){ .notice .n-body { padding-left: 16px; } }
-.qa { border: 1px solid var(--line); border-radius: 14px; background: var(--panel); margin: 0 0 10px; overflow: hidden; transition: border-color .18s var(--ease); }
-.qa:hover { border-color: var(--line-2); }
-.qa[open] { border-color: var(--accent-line); }
-.qa > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 56px; padding: 15px 18px; color: var(--ink); font-weight: 700; font-size: 14.5px; transition: background-color .16s var(--ease); }
-.qa > summary:hover { background: rgba(255,255,255,.03); }
-.qa > summary::-webkit-details-marker { display: none; }
-.qa .chev-q { flex: 0 0 auto; width: 26px; height: 26px; display: grid; place-items: center; color: var(--accent-3); transition: transform .24s var(--ease); }
-.qa .chev-q svg { width: 17px; height: 17px; }
-.qa[open] .chev-q { transform: rotate(180deg); }
-.qa .a { padding: 0 18px 16px; color: var(--text); font-size: 13.5px; line-height: 1.66; }
-.qa .a a { color: var(--accent-3); text-decoration: underline; text-underline-offset: 3px; }
-.field-notes { border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 16px; background: var(--panel); padding: clamp(20px,3vh,26px) clamp(18px,3vw,26px); margin: 16px 0 0; scroll-margin-top: 82px; }
-.field-notes h2 { margin: 0 0 12px; font-size: clamp(1.08rem,2.4vw,1.35rem); font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
-.field-notes .fn-body { color: var(--text); font-size: 14px; line-height: 1.68; max-width: 74ch; }
-.field-notes .fn-body strong { color: var(--ink); font-weight: 700; }
-.field-notes .fn-body ul { margin: 8px 0; padding-left: 20px; }
-.field-notes .fn-body li { margin-bottom: 6px; }
-@media (max-width: 900px){
-  .docs { grid-template-columns: 1fr; gap: 0; }
-  .toc { position: sticky; top: 55px; z-index: 20; display: flex; gap: 8px; overflow-x: auto; max-height: none; background: rgba(10,14,20,.82); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 10px 2px; margin: 0 0 14px; border-bottom: 1px solid var(--line); }
-  .toc-h { display: none; }
-  .toc a { flex: 0 0 auto; white-space: nowrap; border-left: 0; border: 1px solid var(--line); border-radius: 999px; padding: 9px 15px; font-size: 12.5px; min-height: 40px; display: flex; align-items: center; }
-  .toc a.active { color: var(--accent-3); border-color: var(--accent); background: var(--accent-soft); }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 2rem;
+  background: var(--bg);
+  -webkit-text-size-adjust: 100%;
 }
-.site-foot { width: min(1160px, 100%); margin: 0 auto; padding: 26px clamp(16px,4vw,30px) 48px; border-top: 1px solid var(--line); color: var(--faint); font-size: 12.5px; line-height: 1.65; }
-.site-foot .wrap { max-width: 88ch; }
-.site-foot a { color: var(--muted); text-decoration: underline; text-underline-offset: 2px; }
-.site-foot a:hover { color: var(--accent-3); }
-html.js .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s var(--ease), transform .6s var(--ease); }
-html.js .reveal.in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce){ html.js .reveal { opacity: 1; transform: none; transition: none; } }
-@media (max-width: 560px){ .ticker { display: none; } .amount { font-size: 1.6rem; } .hero { padding-top: 26px; } }
+body {
+  margin: 0;
+  min-width: 280px;
+  color: var(--text);
+  background: var(--bg);
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+::selection {
+  color: var(--accent-ink);
+  background: var(--accent);
+}
+a {
+  color: var(--accent);
+  text-decoration-thickness: .075em;
+  text-underline-offset: .2em;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+a:hover {
+  color: var(--text);
+}
+a:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 5px;
+  border-radius: calc(var(--radius) * .35);
+}
+img,
+svg,
+video {
+  max-width: 100%;
+  vertical-align: middle;
+}
+img,
+video {
+  height: auto;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  color: var(--text);
+  font-family: var(--display);
+  font-weight: 650;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+p,
+ul,
+ol,
+dl,
+figure,
+blockquote {
+  margin-top: 0;
+}
+[hidden] {
+  display: none !important;
+}
+.c3c3a14 {
+  width: min(100% - 6rem, 1240px);
+  margin-inline: auto;
+}
+.cff1a4d {
+  position: absolute;
+  z-index: 20;
+  top: 1rem;
+  left: 1rem;
+  padding: .75rem 1.15rem;
+  transform: translateY(-180%);
+  border-radius: var(--radius);
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-weight: 600;
+}
+.cff1a4d:focus {
+  transform: translateY(0);
+}
+.cff51d8 {
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 10%, var(--bg));
+  background: var(--bg);
+}
+.c172ed4 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  min-height: 88px;
+  padding-block: 1rem;
+}
+.c670459 {
+  display: inline-flex;
+  align-items: center;
+  gap: .75rem;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 1.2rem;
+  font-weight: 650;
+  letter-spacing: -.04em;
+}
+.cf04f25 {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--surface));
+  border-radius: calc(var(--radius) * .55);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+}
+.cf04f25 svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.cd7624d {
+  display: inline-flex;
+  align-items: center;
+  gap: .8rem;
+  padding: .5rem 0;
+  color: var(--text);
+  font-size: .9rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cd7624d:hover {
+  color: var(--accent);
+}
+.cb5135c {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 15%, var(--bg));
+  background:
+    radial-gradient(ellipse at 95% 12%, color-mix(in srgb, var(--accent) 14%, transparent), color-mix(in srgb, var(--accent) 0%, transparent) 62%),
+    linear-gradient(130deg, var(--surface), color-mix(in srgb, var(--accent) 5%, var(--bg)) 70%, var(--bg));
+}
+.cb5135c::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 520px;
+  height: 520px;
+  right: -240px;
+  bottom: -310px;
+  border: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
+  border-radius: 50%;
+  box-shadow: 0 0 0 65px color-mix(in srgb, var(--accent) 3%, transparent), 0 0 0 130px color-mix(in srgb, var(--accent) 2%, transparent);
+  pointer-events: none;
+}
+.ce1fa36 {
+  padding-block: 1.6rem 5rem;
+}
+.c64843f {
+  margin-bottom: 3.8rem;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.6;
+}
+.c09ad93 {
+  display: inline;
+  color: var(--muted);
+  font-family: var(--body);
+  font-size: inherit;
+  text-decoration: none;
+}
+.c09ad93 a,
+a.c09ad93 {
+  color: var(--muted);
+  text-decoration: none;
+}
+.c09ad93 a:hover,
+a.c09ad93:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+.c64843f ol,
+.c64843f ul,
+ol.c09ad93,
+ul.c09ad93 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .45rem .7rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.c64843f li {
+  display: inline;
+}
+.c64843f [aria-current="page"] {
+  color: var(--text);
+}
+.cdeb742 {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-bottom: 1.35rem;
+  color: var(--accent);
+  font-size: .875rem;
+  font-weight: 600;
+}
+.ca43097 {
+  padding-block: .3rem;
+}
+.c20d047 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  max-width: 180px;
+  padding: .4rem .65rem;
+  border: 1px solid color-mix(in srgb, var(--text) 9%, var(--surface));
+  border-radius: calc(var(--radius) * .6);
+  background: var(--surface);
+  box-shadow: 0 3px 10px color-mix(in srgb, var(--text) 4%, transparent);
+  color: var(--text);
+  font-size: .8rem;
+  line-height: 1;
+}
+.c20d047:empty {
+  display: none;
+}
+.c20d047 img,
+.c20d047 svg {
+  display: block;
+  width: auto;
+  max-width: 148px;
+  height: 24px;
+  object-fit: contain;
+}
+.cb5135c h1 {
+  max-width: 1050px;
+  margin: 0 0 1.5rem;
+  font-family: var(--display);
+  font-size: clamp(2.7rem, 5.7vw, 5.1rem);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -.055em;
+  overflow-wrap: anywhere;
+}
+.cb5135c h1 em {
+  color: var(--accent);
+  font-style: normal;
+}
+.cb5135c h1 a {
+  color: inherit;
+}
+.cbd7cf5 {
+  max-width: 760px;
+  margin: 0 0 2.1rem;
+  color: var(--muted);
+  font-size: clamp(1.05rem, 1.6vw, 1.22rem);
+  line-height: 1.75;
+  text-wrap: pretty;
+}
+.c554154 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.7rem;
+  min-height: 54px;
+  padding: .85rem 1.35rem;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 18%, transparent);
+  font-family: var(--body);
+  font-size: .95rem;
+  font-weight: 650;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+.c554154:hover {
+  color: var(--accent-ink);
+  background: color-mix(in srgb, var(--accent) 92%, var(--text));
+  box-shadow: 0 9px 24px color-mix(in srgb, var(--accent) 24%, transparent);
+  transform: translateY(-2px);
+}
+.c672320 {
+  font-family: var(--body);
+  font-size: 1.25em;
+  line-height: 1;
+}
+.cdcfbc0 {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block: 1.5rem 4.5rem;
+}
+.c84253b {
+  min-width: 0;
+  padding: 1.2rem 1.35rem;
+  border: 1px solid color-mix(in srgb, var(--text) 9%, var(--surface));
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--text) 3%, transparent);
+}
+.c84253b strong {
+  display: block;
+  margin-bottom: .2rem;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -.02em;
+}
+.c84253b span {
+  display: block;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.5;
+}
+.ce5f8bd {
+  display: grid;
+  grid-template-columns: 235px minmax(0, 1fr);
+  align-items: start;
+  gap: clamp(2.5rem, 5vw, 5rem);
+  padding-bottom: 4.5rem;
+}
+.cbbb538 {
+  position: sticky;
+  top: 2rem;
+  min-width: 0;
+  max-height: calc(100dvh - 4rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--muted) 35%, var(--surface)) var(--surface);
+  padding: .3rem .75rem 1rem .25rem;
+}
+.c7fd5b0 {
+  margin: 0 0 1.1rem;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: .95rem;
+  font-weight: 650;
+  letter-spacing: -.02em;
+}
+.c07cbdd {
+  display: grid;
+  gap: .3rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.c07cbdd li {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+.ceb2107 {
+  position: relative;
+  display: block;
+  padding: .7rem .9rem .7rem 1.1rem;
+  border-inline-start: 2px solid color-mix(in srgb, var(--muted) 18%, var(--bg));
+  border-radius: 0 calc(var(--radius) * .55) calc(var(--radius) * .55) 0;
+  color: var(--muted);
+  font-family: var(--body);
+  font-size: .85rem;
+  font-weight: 450;
+  line-height: 1.5;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+.ceb2107:hover {
+  border-inline-start-color: color-mix(in srgb, var(--accent) 45%, var(--bg));
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 5%, var(--bg));
+}
+.ceb2107[aria-current="location"] {
+  border-inline-start-color: var(--accent);
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 9%, var(--bg));
+  font-weight: 650;
+}
+.c38ef58 {
+  margin: 1.65rem 0 0;
+  padding: 1.2rem 0 0;
+  border-top: 1px solid color-mix(in srgb, var(--text) 10%, var(--bg));
+  color: var(--muted);
+  font-size: .78rem;
+  line-height: 1.65;
+}
+.cc24357 {
+  min-width: 0;
+}
+.cd17f23 {
+  padding: clamp(1.3rem, 3vw, 2.3rem);
+  margin-bottom: 3.75rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 18%, var(--surface));
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 10px 35px color-mix(in srgb, var(--text) 5%, transparent);
+  scroll-margin-top: 2rem;
+}
+.cd1ddd5 {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: .5rem 1.5rem;
+  justify-content: space-between;
+  margin-bottom: 1.4rem;
+}
+.cd1ddd5 h2 {
+  margin: 0;
+  font-size: clamp(1.45rem, 2.3vw, 1.85rem);
+  letter-spacing: -.04em;
+}
+.cd1ddd5 p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .8rem;
+}
+.c46aeaa {
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) var(--surface);
+}
+.cf00805 {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+  font-family: var(--body);
+  font-size: .925rem;
+  line-height: 1.6;
+  text-align: left;
+}
+.cf00805 caption {
+  padding: 0 0 1rem;
+  color: var(--muted);
+  font-size: .85rem;
+  text-align: left;
+}
+.cf00805 th,
+.cf00805 td {
+  padding: 1.05rem .85rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 9%, var(--surface));
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.cf00805 th {
+  width: 37%;
+  color: var(--muted);
+  font-weight: 500;
+}
+.cf00805 thead th {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 5%, var(--surface));
+  font-weight: 650;
+}
+.cf00805 td {
+  font-weight: 550;
+}
+.cf00805 tr > :first-child {
+  padding-left: 0;
+}
+.cf00805 tr > :last-child {
+  padding-right: 0;
+}
+.cf00805 tbody:last-child tr:last-child > *,
+.cf00805 > tr:last-child > * {
+  border-bottom: 0;
+}
+.cf00805 td p:last-child,
+.cf00805 th p:last-child {
+  margin-bottom: 0;
+}
+.c7a0a9c {
+  min-width: 0;
+}
+.c63cdf4 {
+  min-width: 0;
+  margin: 0 0 3.4rem;
+  scroll-margin-top: 2rem;
+}
+.c63cdf4 + .c63cdf4 {
+  padding-top: 2.8rem;
+  border-top: 1px solid color-mix(in srgb, var(--text) 11%, var(--bg));
+}
+.cd3b07b {
+  margin: 0 0 1.25rem;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+  font-weight: 600;
+  line-height: 1.22;
+  letter-spacing: -.045em;
+}
+.c068057 {
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.85;
+  overflow-wrap: anywhere;
+}
+.c068057 > :last-child {
+  margin-bottom: 0;
+}
+.c068057 p {
+  margin: 0 0 1.3rem;
+  text-wrap: pretty;
+}
+.c068057 h3 {
+  margin: 2rem 0 .9rem;
+  font-size: clamp(1.2rem, 2vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.025em;
+}
+.c068057 h4,
+.c068057 h5,
+.c068057 h6 {
+  margin: 1.6rem 0 .75rem;
+  font-size: 1.075rem;
+  line-height: 1.4;
+}
+.c068057 h3:first-child,
+.c068057 h4:first-child {
+  margin-top: 0;
+}
+.c068057 strong,
+.c01a0b6 strong {
+  color: var(--text);
+  font-weight: 650;
+}
+.c068057 ul,
+.c068057 ol,
+.c01a0b6 ul,
+.c01a0b6 ol {
+  margin: 1.2rem 0 1.6rem;
+  padding-left: 1.5rem;
+}
+.c068057 li,
+.c01a0b6 li {
+  padding-left: .4rem;
+  margin-block: .55rem;
+}
+.c068057 li::marker,
+.c01a0b6 li::marker {
+  color: var(--accent);
+  font-weight: 600;
+}
+.c068057 li > ul,
+.c068057 li > ol {
+  margin-block: .5rem;
+}
+.c068057 li p {
+  margin-bottom: .6rem;
+}
+.c068057 blockquote {
+  margin: 1.8rem 0;
+  padding: 1.3rem 1.5rem;
+  border-inline-start: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  background: color-mix(in srgb, var(--accent) 6%, var(--surface));
+  color: var(--text);
+  font-size: 1.05rem;
+}
+.c068057 blockquote > :last-child {
+  margin-bottom: 0;
+}
+.c068057 blockquote cite {
+  display: block;
+  margin-top: .9rem;
+  color: var(--muted);
+  font-size: .85rem;
+  font-style: normal;
+}
+.c068057 table {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 1.7rem 0;
+  overflow-x: auto;
+  border: 1px solid color-mix(in srgb, var(--text) 12%, var(--surface));
+  border-radius: var(--radius);
+  border-spacing: 0;
+  background: var(--surface);
+  font-family: var(--body);
+  font-size: .875rem;
+  line-height: 1.65;
+  text-align: left;
+  scrollbar-width: thin;
+  scrollbar-color: var(--muted) var(--surface);
+}
+.c068057 table caption {
+  padding: .9rem 1rem;
+  color: var(--muted);
+  font-size: .82rem;
+  text-align: left;
+}
+.c068057 th,
+.c068057 td {
+  min-width: 125px;
+  padding: 1rem 1.15rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--text) 9%, var(--surface));
+  vertical-align: top;
+}
+.c068057 th {
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  font-weight: 650;
+}
+.c068057 tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--text) 2%, var(--surface));
+}
+.c068057 tbody:last-child tr:last-child > * {
+  border-bottom: 0;
+}
+.c068057 td > :last-child,
+.c068057 th > :last-child {
+  margin-bottom: 0;
+}
+.c068057 figure {
+  margin: 1.8rem 0;
+}
+.c068057 figure img {
+  display: block;
+  border-radius: var(--radius);
+}
+.c068057 figcaption {
+  margin-top: .7rem;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.6;
+}
+.c068057 code,
+.c01a0b6 code {
+  padding: .1em .35em;
+  border-radius: calc(var(--radius) * .25);
+  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
+  color: var(--text);
+  font-family: var(--body);
+  font-size: .9em;
+}
+.c068057 pre {
+  overflow-x: auto;
+  padding: 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--text) 10%, var(--surface));
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: .875rem;
+  line-height: 1.7;
+}
+.c068057 pre code {
+  padding: 0;
+  background: var(--surface);
+}
+.c068057 hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid color-mix(in srgb, var(--text) 12%, var(--bg));
+}
+.c068057 dt {
+  margin-top: 1.1rem;
+  color: var(--text);
+  font-weight: 650;
+}
+.c068057 dd {
+  margin: .4rem 0 1rem;
+  color: var(--muted);
+}
+.c0452d8 {
+  padding-top: 2.75rem;
+  border-top: 1px solid color-mix(in srgb, var(--text) 11%, var(--bg));
+  scroll-margin-top: 2rem;
+}
+.c0452d8 > .cd3b07b {
+  margin-bottom: 1.65rem;
+}
+.c749a8c {
+  margin: 0 0 .8rem;
+  border: 1px solid color-mix(in srgb, var(--text) 11%, var(--surface));
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: 0 3px 12px color-mix(in srgb, var(--text) 3%, transparent);
+  overflow: clip;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.c749a8c:hover {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--surface));
+}
+.c749a8c[open] {
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--surface));
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--text) 4%, transparent);
+}
+.c3cf455 {
+  position: relative;
+  display: block;
+  padding: 1.35rem 3.8rem 1.35rem 1.4rem;
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 1.025rem;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: -.015em;
+  list-style: none;
+  cursor: pointer;
+}
+.c3cf455::-webkit-details-marker {
+  display: none;
+}
+.c3cf455::after {
+  content: "+";
+  position: absolute;
+  top: 1.3rem;
+  right: 1.35rem;
+  display: grid;
+  place-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  color: var(--accent);
+  font-family: var(--body);
+  font-size: 1.15rem;
+  font-weight: 400;
+  line-height: 1;
+}
+.c749a8c[open] > .c3cf455::after {
+  content: "−";
+}
+.c749a8c > .c3cf455:focus-visible {
+  outline-offset: -5px;
+}
+.c01a0b6 {
+  padding: 0 1.4rem 1.45rem;
+  color: var(--muted);
+  font-family: var(--body);
+  font-size: .95rem;
+  line-height: 1.8;
+}
+.c01a0b6 > :first-child {
+  margin-top: 0;
+}
+.c01a0b6 > :last-child {
+  margin-bottom: 0;
+}
+.c01a0b6 p {
+  margin-bottom: 1rem;
+}
+.c7942e6 {
+  padding-block: 3rem 3.6rem;
+  border-top: 1px solid color-mix(in srgb, var(--text) 10%, var(--bg));
+  background: color-mix(in srgb, var(--surface) 70%, var(--bg));
+  scroll-margin-top: 2rem;
+}
+.c690c6b {
+  display: grid;
+  grid-template-columns: 235px minmax(0, 1fr);
+  gap: clamp(2.5rem, 5vw, 5rem);
+}
+.c423902 h2 {
+  margin-bottom: .7rem;
+  font-size: 1.4rem;
+  letter-spacing: -.035em;
+}
+.c423902 p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .85rem;
+  line-height: 1.7;
+}
+.cf3143b {
+  min-width: 0;
+}
+.c1d12f5 {
+  display: grid;
+  gap: .7rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--body);
+}
+.c29fed8 {
+  display: block;
+  min-width: 0;
+  padding: 1rem 1.2rem;
+  border: 1px solid color-mix(in srgb, var(--text) 9%, var(--surface));
+  border-radius: calc(var(--radius) * .75);
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--body);
+  font-size: .875rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.c29fed8 a,
+a.c29fed8 {
+  color: var(--text);
+  text-decoration-color: color-mix(in srgb, var(--accent) 35%, var(--surface));
+  text-underline-offset: .25em;
+}
+.c29fed8 a:hover,
+a.c29fed8:hover {
+  color: var(--accent);
+  text-decoration-color: var(--accent);
+}
+.c29fed8 p {
+  margin: .4rem 0 0;
+}
+.c29fed8 small {
+  color: var(--muted);
+  font-size: .8rem;
+}
+.c8c832e {
+  border-top: 1px solid color-mix(in srgb, var(--text) 10%, var(--bg));
+  background: var(--bg);
+}
+.cb669c3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem 2rem;
+  min-height: 100px;
+  padding-block: 1.5rem;
+}
+.c33df94 {
+  color: var(--text);
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: -.025em;
+}
+.cab4390 {
+  margin: 0;
+  color: var(--muted);
+  font-size: .8rem;
+}
+.cab4390 span {
+  color: var(--text);
+}
+@media (min-width: 1500px) {
+  .ce1fa36 {
+    padding-bottom: 6rem;
+  }
+  .c64843f {
+    margin-bottom: 4.5rem;
+  }
+  .ce5f8bd {
+    gap: 5.5rem;
+  }
+  .c690c6b {
+    gap: 5.5rem;
+  }
+}
+@media (max-width: 1050px) {
+  .c3c3a14 {
+    width: calc(100% - 3rem);
+  }
+  .ce5f8bd,
+  .c690c6b {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 2.25rem;
+  }
+  .cdcfbc0 {
+    gap: .75rem;
+  }
+  .c84253b {
+    padding: 1rem;
+  }
+  .ceb2107 {
+    font-size: .8rem;
+  }
+}
+@media (max-width: 760px) {
+  html {
+    scroll-padding-top: 1rem;
+  }
+  .c172ed4 {
+    min-height: 72px;
+  }
+  .ce1fa36 {
+    padding-block: 1.25rem 3.25rem;
+  }
+  .c64843f {
+    margin-bottom: 2.6rem;
+  }
+  .cb5135c h1 {
+    max-width: 100%;
+    font-size: clamp(2.45rem, 7.4vw, 3.6rem);
+    letter-spacing: -.045em;
+  }
+  .cbd7cf5 {
+    font-size: 1.05rem;
+  }
+  .cdcfbc0 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-block: 1.2rem 2.5rem;
+  }
+  .ce5f8bd {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2.3rem;
+    padding-bottom: 3rem;
+  }
+  .cbbb538 {
+    position: static;
+    max-height: none;
+    padding: 1.2rem;
+    border: 1px solid color-mix(in srgb, var(--text) 10%, var(--surface));
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .c7fd5b0 {
+    margin-bottom: .8rem;
+  }
+  .c07cbdd {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .4rem .8rem;
+  }
+  .ceb2107 {
+    height: 100%;
+    padding-block: .7rem;
+    font-size: .825rem;
+  }
+  .c38ef58 {
+    display: none;
+  }
+  .cd17f23 {
+    margin-bottom: 2.5rem;
+  }
+  .c63cdf4 {
+    margin-bottom: 2.6rem;
+  }
+  .c63cdf4 + .c63cdf4 {
+    padding-top: 2.2rem;
+  }
+  .c690c6b {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem;
+  }
+  .c7942e6 {
+    padding-block: 2.5rem;
+  }
+  .c63cdf4,
+  .cd17f23,
+  .c0452d8,
+  .c7942e6 {
+    scroll-margin-top: 1rem;
+  }
+}
+@media (max-width: 440px) {
+  .c3c3a14 {
+    width: calc(100% - 2rem);
+  }
+  .c172ed4 {
+    gap: 1rem;
+  }
+  .c670459 {
+    gap: .5rem;
+    font-size: 1.05rem;
+  }
+  .cd7624d {
+    gap: .45rem;
+    font-size: .8rem;
+  }
+  .cdeb742 {
+    gap: .65rem;
+    margin-bottom: 1.1rem;
+  }
+  .cb5135c h1 {
+    font-size: 2.5rem;
+  }
+  .c554154 {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .c84253b {
+    padding: .9rem;
+  }
+  .c84253b strong {
+    font-size: .9rem;
+  }
+  .c84253b span {
+    font-size: .75rem;
+  }
+  .c07cbdd {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .cd17f23 {
+    padding: 1.15rem;
+  }
+  .cf00805 {
+    font-size: .85rem;
+  }
+  .cf00805 th,
+  .cf00805 td {
+    padding-block: .9rem;
+    padding-inline: .5rem;
+  }
+  .c068057 {
+    font-size: .95rem;
+    line-height: 1.8;
+  }
+  .c068057 blockquote {
+    padding: 1rem 1.1rem;
+  }
+  .c3cf455 {
+    padding: 1.1rem 3rem 1.1rem 1.1rem;
+    font-size: .95rem;
+  }
+  .c3cf455::after {
+    top: 1.1rem;
+    right: .9rem;
+  }
+  .c01a0b6 {
+    padding: 0 1.1rem 1.2rem;
+    font-size: .9rem;
+  }
+  .cb669c3 {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .6rem;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+  .c554154:hover {
+    transform: none;
+  }
+}
+@media print {
+  body {
+    background: var(--surface);
+    font-size: 10pt;
+  }
+  .c3c3a14 {
+    width: 100%;
+  }
+  .cff51d8,
+  .cff1a4d,
+  .c554154,
+  .cbbb538,
+  .cb5135c::after {
+    display: none;
+  }
+  .cb5135c {
+    background: var(--surface);
+  }
+  .ce1fa36 {
+    padding-block: 1rem 2rem;
+  }
+  .c64843f {
+    margin-bottom: 1.5rem;
+  }
+  .cb5135c h1 {
+    font-size: 32pt;
+  }
+  .cdcfbc0 {
+    margin-bottom: 2rem;
+  }
+  .ce5f8bd,
+  .c690c6b {
+    display: block;
+  }
+  .cd17f23,
+  .c84253b,
+  .c749a8c {
+    box-shadow: none;
+  }
+  .cd3b07b,
+  .c068057 h3 {
+    break-after: avoid;
+  }
+  .c749a8c,
+  .c29fed8,
+  .c068057 tr {
+    break-inside: avoid;
+  }
+  .c423902 {
+    margin-bottom: 1rem;
+  }
+}
 </style>
-<meta content="website" property="og:type"/><meta content="https://pumpfun-app.github.io/" property="og:url"/>
-<meta content="Pumpfun App — Launch &amp; Trade Solana Memecoins on Bonding Curves" property="og:title"/>
-<meta content="How pump.fun works on Solana — launching and trading memecoins through bonding curves, migration to a DEX, fees, and the real risks. Independent, not affiliated with pump.fun." property="og:description"/>
-<meta content="Pumpfun App" property="og:site_name"/><meta content="https://pumpfun-app.github.io/sol.png" property="og:image"/>
-<meta content="summary_large_image" name="twitter:card"/><meta content="Pumpfun App — Launch &amp; Trade Solana Memecoins" name="twitter:title"/>
-<meta content="How pump.fun works on Solana — bonding curves, migration, fees and the real risks. Not affiliated with pump.fun." name="twitter:image"/>
-<script type="application/ld+json">
-{"@context":"https://schema.org","@graph":[{"@type":"WebSite","@id":"https://pumpfun-app.github.io/#website","url":"https://pumpfun-app.github.io/","name":"Pumpfun App","inLanguage":"en"},{"@type":"WebPage","@id":"https://pumpfun-app.github.io/#webpage","url":"https://pumpfun-app.github.io/","name":"Pumpfun App — Launch & Trade Solana Memecoins on Bonding Curves","description":"How pump.fun works on Solana — launching and trading memecoins through bonding curves, migration to a DEX, fees, and the real risks. Independent, not affiliated with pump.fun.","isPartOf":{"@id":"https://pumpfun-app.github.io/#website"},"inLanguage":"en","dateModified":"2026-08-24"},{"@type":"FAQPage","@id":"https://pumpfun-app.github.io/#faq","mainEntity":[{"@type":"Question","name":"What is pump.fun, and is this the official site?","acceptedAnswer":{"@type":"Answer","text":"Pump.fun is a platform on Solana for launching and trading memecoins on bonding curves. This page is an independent, informational resource and is not affiliated with or endorsed by pump.fun; any launching or trading happens in the external app."}},{"@type":"Question","name":"How does a pump.fun bonding curve work?","acceptedAnswer":{"@type":"Answer","text":"Each new token is priced by a bonding curve: the price is set by a formula that rises as more of the supply is bought and falls as it is sold, so there is no order book or presale. When the token's market cap reaches a set threshold, its liquidity migrates to a decentralized exchange for open trading."}},{"@type":"Question","name":"How do I launch a token on pump.fun?","acceptedAnswer":{"@type":"Answer","text":"In the app you connect a Solana wallet, set a name, ticker and image, and deploy. The token launches on a bonding curve with no presale for a small fee in SOL. Anyone can then buy or sell against the curve until it reaches the migration threshold."}},{"@type":"Question","name":"What does trading on pump.fun cost?","acceptedAnswer":{"@type":"Answer","text":"You pay Solana network fees plus the platform's trading fee on each buy and sell, and creating a token costs a small amount of SOL. Price impact on the bonding curve can be large for a thinly traded token, so review the quote before you confirm."}},{"@type":"Question","name":"Are pump.fun memecoins safe or a good investment?","acceptedAnswer":{"@type":"Answer","text":"No memecoin is a safe or guaranteed investment. Memecoins are extremely volatile and speculative, most lose most of their value, and rug pulls, insider selling and impersonation scams are common. Only risk what you can afford to lose, and this is not financial advice."}},{"@type":"Question","name":"Do I claim free tokens by connecting a wallet?","acceptedAnswer":{"@type":"Answer","text":"No. Connecting a wallet does not grant free tokens. Any site promising free or guaranteed pump.fun tokens for connecting or approving is almost certainly a scam. Buying happens against the bonding curve and always costs SOL plus fees."}}]}]}
-</script>
-<link href="dashboard/index.html" rel="prefetch"/></head>
+</head>
 <body>
-<a class="skip" href="#main">Skip to content</a>
-<header class="topbar">
-<div class="topbar-left">
-<span class="topbar-logo"><img alt="Pumpfun App" height="24" src="sol.png" width="24"/></span>
-<h1 class="wordmark">Pumpfun<span class="tld"> App</span></h1>
-</div>
-<div class="topbar-right">
-<div aria-label="Live metrics" class="ticker">
-<a aria-label="SOL price" class="tick" href="https://www.coingecko.com/en/coins/solana" rel="noopener noreferrer" target="_blank"><span>SOL</span> <b id="sig-sol">…</b> <span aria-hidden="true" class="ext">↗</span></a>
-<a aria-label="Platform" class="tick" href="#what"><span>Platform</span> <b>Solana</b></a>
-</div>
-<a class="nav-cta" href="dashboard/">Open App <span aria-hidden="true">↗</span></a>
-</div>
+<a class="cff1a4d" href="#guide-main">Skip to guide</a>
+<header class="cff51d8">
+  <div class="c3c3a14 c172ed4">
+    <div class="c670459">
+      <span class="cf04f25" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5h6a3 3 0 0 1 2 1 3 3 0 0 1 2-1h6v14h-6a3 3 0 0 0-2 1 3 3 0 0 0-2-1H4zM12 6.5v14M7 9h2M15 9h2M7 12h2M15 12h2"/></svg></span>
+      <span>The guide</span>
+    </div>
+    <a class="cd7624d" href="dashboard/">Open app <span class="c672320" aria-hidden="true">↗</span></a>
+  </div>
 </header>
-<main id="main">
-<section class="hero">
-<div class="hero-l">
-<span class="eyebrow"><span class="dot" aria-hidden="true"></span>pump.fun · Solana memecoins</span>
-<h2 class="hero-h">Launch &amp; trade <span class="grad">Solana memecoins</span></h2>
-<p class="hero-lead"><strong>Pumpfun App</strong> explains how pump.fun launches and trades memecoins on Solana through <strong>bonding curves</strong> — no presale, no order book — and the real risks before you ever spend a lamport.</p>
-<div class="hero-cta">
-<a class="btn btn-primary" href="dashboard/">Open Pumpfun App <span aria-hidden="true" class="go">↗</span></a>
-<a class="btn btn-ghost" href="#what">How it works</a>
-</div>
-<div class="trust">
-<div class="trust-badge"><span class="tb-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 17c4-9 14-9 18 0"/><circle cx="12" cy="7" r="1.5"/></svg></span><div><b>Bonding Curve</b><span>Fair launch</span></div></div>
-<div class="trust-badge"><span class="tb-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 10-12h-7l0-8z"/></svg></span><div><b>Solana</b><span>Low fees, fast</span></div></div>
-<div class="trust-badge"><span class="tb-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="M9 12l2 2 4-4"/></svg></span><div><b>Non-Custodial</b><span>You sign</span></div></div>
-<div class="trust-badge"><span class="tb-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 17l6-6 4 4 6-8"/></svg></span><div><b>DEX Migration</b><span>At threshold</span></div></div>
-</div>
-</div>
-<div class="hero-r">
-<div class="swap-wrap">
-<section aria-labelledby="preview-title" class="swap-card">
-<div class="card-head">
-<p class="card-title" id="preview-title">Buy</p>
-<span class="preview-tag"><span aria-hidden="true"></span>Preview</span>
-</div>
-<div class="leg" id="leg-from">
-<div class="leg-top"><span class="leg-cap">You pay</span><span class="leg-bal">Balance: —</span></div>
-<div class="leg-body">
-<span class="amount dim">0.0</span>
-<span class="asset" role="button" tabindex="0" aria-label="From token: SOL"><span class="tok"><img alt="SOL token" decoding="async" height="28" loading="lazy" src="sol.png" width="28"/></span>SOL<svg aria-hidden="true" class="chev-sm" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
-</div>
-</div>
-<button aria-label="Swap direction" class="swap-arrow" id="route-swap" title="Swap direction" type="button">
-<svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M8 4v13M8 4L4 8M8 4l4 4M16 20V7M16 20l-4-4M16 20l4-4"></path></svg>
-</button>
-<div class="leg" id="leg-to">
-<div class="leg-top"><span class="leg-cap">You receive</span><span class="leg-bal">Balance: —</span></div>
-<div class="leg-body">
-<span class="amount dim">0.0</span>
-<span class="asset" role="button" tabindex="0" aria-label="To token: new memecoin"><span class="tok" style="background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line)"><svg width="17" height="17" fill="none" stroke="#6ee7b7" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></span>New token<svg aria-hidden="true" class="chev-sm" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"></path></svg></span>
-</div>
-</div>
-<div class="route-panel">
-<div class="route-info"><b id="route-name">SOL → New token</b><span>Bonding curve · Solana</span></div>
-<div class="route-tok"><span class="tok" style="background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent-line)"><svg width="14" height="14" fill="none" stroke="#6ee7b7" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg></span> New token</div>
-</div>
-<div class="route-row"><span>Network</span><b>Solana</b></div>
-<div class="route-row"><span>Custody</span><b>Non-custodial</b></div>
-<a class="swap-cta" href="dashboard/">Open Pumpfun App<span aria-hidden="true" class="cta-go">↗</span></a>
-<p class="swap-foot">Preview only · launching &amp; trading happen in the app</p>
+<section class="cb5135c" aria-labelledby="guide-title">
+  <div class="c3c3a14 ce1fa36">
+    <nav class="c64843f" aria-label="Breadcrumb"><nav class="c09ad93" aria-label="Breadcrumb"><a href="dashboard/">Home</a> <span>/</span> <span>Trading bots</span> <span>/</span> <span>Pump.fun</span></nav></nav>
+    <div class="cdeb742"><span class="ca43097">A closer look</span><span class="c20d047"></span></div>
+    <h1 id="guide-title"><em>Pump.fun</em>: Solana's Launchpad for Instant Memecoins</h1>
+    <p class="cbd7cf5">Pump.fun is a website built on Solana where anyone can turn an idea into a tradable token in under a minute, with no code, no application and no upfront liquidity to raise. Instead of a presale, every token starts on a bonding curve that sets the price automatically as people buy and sell, and if enough SOL accumulates in that curve the token graduates to a public decentralized exchange. The model is simple to use and cheap to try, which is also why it carries sharp, concrete risks that are worth understanding before any token on the platform is touched.</p>
+    <a class="c554154" href="dashboard/">Open dashboard <span class="c672320" aria-hidden="true">↗</span></a>
+  </div>
 </section>
+<div class="c3c3a14">
+  <div class="cdcfbc0" aria-label="Guide highlights">
+    <div class="c84253b"><strong>Key facts</strong><span>The essentials at a glance</span></div>
+    <div class="c84253b"><strong>In depth</strong><span>Explore the details</span></div>
+    <div class="c84253b"><strong>Questions answered</strong><span>Find a little more clarity</span></div>
+    <div class="c84253b"><strong>Sources</strong><span>Follow the references</span></div>
+  </div>
+  <div class="ce5f8bd">
+    <nav class="cbbb538" aria-labelledby="toc-title">
+      <h2 class="c7fd5b0" id="toc-title">On this page</h2>
+      <ul class="c07cbdd" id="toc-list">
+        <li><a class="ceb2107" href="#key-facts">Key facts</a></li>
+        <li><a class="ceb2107" href="#guide-sections" data-sections-link>In depth</a></li>
+        <li><a class="ceb2107" href="#questions">Questions &amp; answers</a></li>
+        <li><a class="ceb2107" href="#sources">Sources</a></li>
+      </ul>
+      <p class="c38ef58">Read from the beginning, or jump to the details you need.</p>
+    </nav>
+    <main class="cc24357" id="guide-main" tabindex="-1">
+      <section class="cd17f23" id="key-facts" aria-labelledby="facts-title">
+        <div class="cd1ddd5"><h2 id="facts-title">Key facts</h2><p>At a glance</p></div>
+        <div class="c46aeaa"><table class="cf00805"><tbody><tr><th scope="row">Blockchain</th><td>Solana</td></tr>
+<tr><th scope="row">Pricing mechanism</th><td>Automated bonding curve</td></tr>
+<tr><th scope="row">Token standard</th><td>SPL token</td></tr>
+<tr><th scope="row">Graduation trigger</th><td>Bonding-curve market cap threshold</td></tr>
+<tr><th scope="row">Destination after graduation</th><td>Liquidity pool on a Solana DEX (e.g. Raydium)</td></tr>
+<tr><th scope="row">Primary risk</th><td>Extreme volatility and rug pulls on ungraduated tokens</td></tr></tbody></table></div>
+      </section>
+      <div class="c7a0a9c" id="guide-sections"><section class="c63cdf4"><h2 class="cd3b07b">What Is Pump.fun?</h2><div class="c068057"><strong>Pump.fun is a Solana application that lets anyone create a new token in seconds and puts it on an automated pricing curve the moment it goes live, with no coding, no listing fee negotiation and no team pre-sale.</strong> A creator names the token, uploads an image and a short description, and the site deploys a standard token contract along with a bonding-curve pool that immediately starts quoting a buy and sell price. There is no waiting period, no whitelist and no minimum amount of capital required to launch, which is the entire point of the design: it turns token creation from a multi-day technical project into something anyone can do from a phone browser.<h3>Who Built Pump.fun and Why It Spread So Fast</h3>Pump.fun launched in early 2024 and quickly became one of the busiest applications on Solana, riding the network's low fees and fast confirmation times. Each token it mints follows the same <a href="https://solana.com/docs" rel="nofollow noopener" target="_blank">SPL token standard</a> used across the chain, so wallets, explorers and DEXs all recognize it without any custom integration. The platform's own cut comes from a small trading fee rather than from selling tokens to creators, which is part of why launching costs almost nothing beyond network gas.<h3>The Fair-Launch Model Behind Pump.fun</h3>Every token on Pump.fun opens at the same starting price on the same curve, with no portion set aside for the team and no private round sold before the public could buy in. That structure puts Pump.fun in the broader category of fair-launch <a href="https://en.wikipedia.org/wiki/Meme_coin" rel="nofollow noopener" target="_blank">memecoins</a>, where the appeal is often cultural or comedic rather than tied to a product roadmap. Fair launch removes one kind of unfair advantage — insider allocation — but it does not remove the risk that a token has no use beyond speculation.</div></section>
+<section class="c63cdf4"><h2 class="cd3b07b">How Pump.fun's Bonding Curve Pricing Works</h2><div class="c068057">Pump.fun's bonding curve is a formula, not an order book: the contract itself holds a reserve of SOL and mints tokens against it, so the price is whatever the curve's math says it is at that exact supply level. Every buy moves along the curve and raises the price for the next buyer; every sell moves back down it and lowers the price for the next seller. There is always a counterparty, because the contract is the counterparty, which is why a brand-new Pump.fun token can be bought or sold instantly even with zero outside trading interest.<h3>Early Buyers vs Later Buyers on the Curve</h3>Because price rises with every purchase, the earliest buyers on a given token pay the least and the latest buyers before graduation pay the most for the same token. This is mechanical, not a judgment of quality — a token can climb steadily on steady demand or spike and reverse within minutes on a burst of buying followed by a wave of selling. Anyone can verify a token's trade history and current holder distribution directly on the <a href="https://explorer.solana.com/" rel="nofollow noopener" target="_blank">Solana explorer</a> rather than relying on a chart alone.<h3>Why the Curve Resists a Pre-Mine</h3>Because the curve sets price by formula from a fixed starting point, a creator cannot quietly mint extra supply to themselves at a discount before the public sees the token — the contract enforces the same curve for every buyer from block one. That removes one specific manipulation, but it says nothing about what a creator does after launch, including how much of the early, cheap supply they personally bought before promoting the token.</div></section>
+<section class="c63cdf4"><h2 class="cd3b07b">Graduating From Pump.fun to a DEX</h2><div class="c068057">A Pump.fun token does not stay on its bonding curve forever. Once enough SOL has flowed into the curve and the token's market cap crosses a set threshold, Pump.fun locks the curve, pairs the accumulated liquidity with the token, and deposits that pool onto a Solana decentralized exchange — most commonly Raydium. This step, called graduating, is the moment a token moves from trading only against the platform's own formula to trading against a normal liquidity pool that any DEX aggregator can route through.<h3>The Market-Cap Threshold That Triggers Graduation</h3>The threshold is measured in the token's bonding-curve market cap, not in the number of holders or the time since launch, so a token can graduate in minutes on heavy buying or never graduate at all if interest fades. Only a small fraction of tokens created on the platform ever reach this point; most sit on the curve with thin volume until trading simply stops.<h3>What Changes for Holders After Graduation</h3>After graduation, price is set the normal way a <a href="https://docs.raydium.io/raydium/" rel="nofollow noopener" target="_blank">DEX liquidity pool</a> sets it — by the ratio of the two assets in the pool — rather than by Pump.fun's internal formula. Liquidity pool tokens from the migration are typically locked, which removes the single most common rug-pull method, where a creator who still controls the pool withdraws it and leaves buyers holding a worthless token.</div></section>
+<section class="c63cdf4"><h2 class="cd3b07b">Pump.fun Fees and Costs</h2><div class="c068057">Creating a token on Pump.fun costs little beyond the Solana network fee for deploying the contract, which is a fraction of a cent on a typically uncongested network. The platform earns its revenue from a small percentage fee charged on every trade executed on the curve, and a separate portion is taken at the moment of graduation when liquidity moves to the DEX. Total trading volume and the fees Pump.fun generates for the protocol are public and trackable, and sites like <a href="https://defillama.com/" rel="nofollow noopener" target="_blank">DeFiLlama</a> aggregate that kind of on-chain revenue data across Solana applications for anyone who wants to check it independently.<table><thead><tr><th>Action</th><th>Who Pays</th><th>What It Covers</th></tr></thead><tbody><tr><td>Launching a token</td><td>Creator</td><td>Solana network fee to deploy the contract</td></tr><tr><td>Buying or selling on the curve</td><td>Trader</td><td>A small percentage trading fee</td></tr><tr><td>Graduation to a DEX</td><td>The pooled liquidity</td><td>Migration fee taken when the pool moves to Raydium</td></tr></tbody></table></div></section>
+<section class="c63cdf4"><h2 class="cd3b07b">How to Launch and Trade a Token on Pump.fun</h2><div class="c068057">Using Pump.fun follows the same mechanics for every token, which is why the process takes minutes rather than days once a wallet is connected.<ul><li>Connect a Solana wallet that already holds a small amount of SOL for fees and purchases.</li><li>To launch, name the token, add an image and description, and confirm the deployment transaction.</li><li>To trade, open an existing token's page, enter a SOL amount, and review the bonding-curve price before buying.</li><li>Watch the curve's progress toward the graduation threshold if tracking how close a token is to reaching a DEX.</li><li>After graduation, trade the token on the DEX it migrated to rather than on the now-closed curve.</li></ul></div></section>
+<section class="c63cdf4"><h2 class="cd3b07b">The Real Risks of Pump.fun Tokens</h2><div class="c068057">The same openness that lets anyone launch a token on Pump.fun in seconds also lets anyone launch a worthless one, since the platform applies no checks on intent. A <strong>rug pull</strong> on an ungraduated token usually means the creator accumulated a large share of the cheap early supply and then sold it all at once, collapsing the price for everyone who bought after them — a risk that drops sharply once a token graduates and its liquidity is locked, but never disappears entirely. <strong>Sniping</strong> is a related problem: bots watch for new token launches and buy within the same block or the next few seconds, often capturing the cheapest supply before a human has even loaded the page. Beyond manipulation, ordinary volatility on these tokens is extreme; a token can double or lose most of its value within an hour on shifting attention alone, and most created tokens never gain enough traders to matter, drifting to zero volume rather than crashing dramatically. None of this is unique to Pump.fun — it is the standard risk profile of ungated, zero-information token markets, a pattern documented in general writing on <a href="https://en.wikipedia.org/wiki/Cryptocurrency" rel="nofollow noopener" target="_blank">cryptocurrency</a> speculation — but the speed of creation here concentrates that risk into a far shorter timeframe than older launches did.</div></section>
+<section class="c63cdf4"><h2 class="cd3b07b">Pump.fun vs Traditional Token Launches</h2><div class="c068057">Older token launches typically ran through a presale or an initial DEX offering, where a project sold part of its supply to early backers, often at a discount and with a vesting schedule, before the token ever traded publicly. Pump.fun skips all of that: no presale round, no vesting, and no gap between a token existing and being tradable by anyone. The trade-off cuts out insider allocation but removes nearly every gate that used to filter out low-effort or bad-faith projects, so due diligence shifts almost entirely onto the trader. Comparing a token's volume and liquidity trend on an aggregator before and after graduation is a more reliable signal than its chart alone, since early curve activity can be thin enough for a handful of trades to move the price sharply either way.</div></section></div>
+      <section class="c0452d8" id="questions" aria-labelledby="questions-title">
+        <h2 class="cd3b07b" id="questions-title">Questions &amp; answers</h2>
+        <details class="c749a8c"><summary class="c3cf455">What is Pump.fun in simple terms?</summary><div class="c01a0b6">Pump.fun is a Solana platform where anyone can create a tradable token in seconds. Each new token starts on an automated bonding curve that sets its buy and sell price by formula, with no presale and no coding required.</div></details>
+<details class="c749a8c"><summary class="c3cf455">How does the Pump.fun bonding curve set the price?</summary><div class="c01a0b6">The curve holds a SOL reserve and mints tokens against it mathematically: every buy moves up the curve and raises the price for the next buyer, and every sell moves back down it. The contract itself is always the counterparty, so there is always a price available.</div></details>
+<details class="c749a8c"><summary class="c3cf455">What does it mean when a Pump.fun token graduates?</summary><div class="c01a0b6">Graduation happens when a token's bonding-curve market cap crosses a set threshold. The curve locks, its accumulated liquidity moves to a Solana DEX such as Raydium, and the token then trades against that pool instead of against the platform's formula.</div></details>
+<details class="c749a8c"><summary class="c3cf455">Is Pump.fun free to use?</summary><div class="c01a0b6">Launching a token costs only the Solana network fee to deploy the contract, which is typically a fraction of a cent. Trading on the curve carries a small percentage fee, and another fee is taken when a token graduates and its liquidity migrates to a DEX.</div></details>
+<details class="c749a8c"><summary class="c3cf455">What is a rug pull on Pump.fun?</summary><div class="c01a0b6">A rug pull is when a creator who holds a large share of a token's cheap early supply sells it all at once, collapsing the price for later buyers. The risk is highest before graduation and drops sharply afterward, since graduated liquidity is typically locked.</div></details>
+<details class="c749a8c"><summary class="c3cf455">Why do bots snipe new Pump.fun launches?</summary><div class="c01a0b6">Sniping bots watch for new token deployments and buy within the first block or seconds of launch, aiming to capture the cheapest supply on the bonding curve before human traders can react. It is a known pattern on fast, permissionless launchpads.</div></details>
+<details class="c749a8c"><summary class="c3cf455">Does every token on Pump.fun graduate to a DEX?</summary><div class="c01a0b6">No. Only a small fraction of tokens created ever reach the market-cap threshold needed to graduate. Most sit on the bonding curve with thin trading volume and eventually stop trading entirely rather than migrating anywhere.</div></details>
+      </section>
+    </main>
+  </div>
 </div>
-</div>
+<section class="c7942e6" id="sources" aria-labelledby="sources-title">
+  <div class="c3c3a14 c690c6b">
+    <div class="c423902"><h2 id="sources-title">Sources</h2><p>References for further reading.</p></div>
+    <div class="cf3143b"><ul class="c1d12f5"><li><a class="c29fed8" href="https://solana.com/docs" rel="nofollow noopener" target="_blank">Solana documentation</a></li>
+<li><a class="c29fed8" href="https://explorer.solana.com/" rel="nofollow noopener" target="_blank">Solana network explorer</a></li>
+<li><a class="c29fed8" href="https://docs.raydium.io/raydium/" rel="nofollow noopener" target="_blank">Raydium documentation</a></li>
+<li><a class="c29fed8" href="https://defillama.com/" rel="nofollow noopener" target="_blank">DeFiLlama</a></li></ul></div>
+  </div>
 </section>
-<div class="content">
-<div class="section-intro reveal">
-<p><strong>Pumpfun App</strong> is an independent explainer for <strong>pump.fun</strong>, a platform on <a href="https://solana.com" rel="noopener noreferrer nofollow" target="_blank">Solana</a> for launching and trading <a href="https://en.wikipedia.org/wiki/Meme_coin" rel="noopener noreferrer nofollow" target="_blank">memecoins</a> on bonding curves. It covers how a token launches, how the curve prices buys and sells, when liquidity migrates to a DEX, what it costs — and, most importantly, the serious risks. This page is <strong>not affiliated with or endorsed by pump.fun</strong>, and nothing here is financial advice.</p>
-</div>
-<div class="docs">
-<nav aria-label="On this page" class="toc">
-<p class="toc-h">On this page</p>
-<a href="#what">What is pump.fun?</a>
-<a href="#curve">Bonding curves explained</a>
-<a href="#launch">Launching a token</a>
-<a href="#trade">Buying &amp; selling</a>
-<a href="#fees">Fees &amp; costs</a>
-<a href="#risks">Risks &amp; scams</a>
-<a href="#trouble">Common problems</a>
-<a href="#faq">Pumpfun FAQ</a>
-<a href="#notes">Notes before you trade</a>
-</nav>
-<div class="doc-main">
-<details class="notice reveal" open="" style="margin-bottom:14px">
-<summary><span class="n-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></span><span class="n-title">High risk — memecoins are extremely speculative</span><span class="chev-w" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="n-body">Memecoins are <strong>extremely volatile and speculative</strong>. The vast majority lose most or all of their value, often within hours, and <strong>rug pulls</strong>, insider dumps and impersonation scams are common. There are <strong>no guaranteed gains</strong>. Only risk what you can afford to lose completely. This page is informational only and is <strong>not financial advice</strong>.</div>
-</details>
-<details class="sec reveal" id="what" open="">
-<summary><h2>What is pump.fun?</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body"><p><strong>Pump.fun</strong> is a platform on Solana that lets anyone create a memecoin in minutes and trade it immediately against a <strong>bonding curve</strong>. There is no presale and no order book: the token launches fair, and every buy and sell interacts with a smart-contract curve that sets the price automatically.</p><p>This is an independent, informational resource and is <strong>not affiliated with or endorsed by pump.fun</strong>. Any launching or trading happens in the external app, where your Solana wallet signs each transaction.</p></div>
-</details>
-<details class="sec reveal" id="curve" open="">
-<summary><h2>Bonding curves explained</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body"><p>A <a href="https://en.wikipedia.org/wiki/Bonding_curve" rel="noopener noreferrer nofollow" target="_blank">bonding curve</a> is a formula held in a smart contract that ties a token's price to how much of its supply has been bought. As buyers purchase along the curve the price rises; as they sell, it falls. No counterparty is needed — the contract itself is the market maker.</p><p>When a token's market cap reaches a set threshold, its accumulated liquidity <strong>migrates to a decentralized exchange</strong> such as a Solana AMM, and it then trades in an open pool. Until migration, all trading happens against the curve, so early price moves can be violent.</p></div>
-</details>
-<details class="sec reveal" id="launch" open="">
-<summary><h2>Launching a token</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body"><p>In the app you connect a Solana wallet such as <a href="https://phantom.app" rel="noopener noreferrer nofollow" target="_blank">Phantom</a>, set a name, ticker and image, and deploy. The token launches on a bonding curve for a small fee in <strong>SOL</strong>, with no presale and no allocation to the creator beyond what they buy on the open curve like everyone else.</p><p>Launching a token is easy and cheap, which is exactly why so many exist and why quality varies wildly. A launch is not an endorsement, an audit, or a promise of value — most tokens see little or no lasting interest.</p></div>
-</details>
-<details class="sec reveal" id="trade" open="">
-<summary><h2>Buying &amp; selling</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body"><p>To buy, connect a Solana wallet, pick a token, enter a SOL amount and confirm — the curve quotes how many tokens you receive. Selling works the same way in reverse. Every action is a signed Solana transaction, so it is <strong>non-custodial</strong>: no operator holds your keys or your coins.</p><p>Because a thinly traded curve moves sharply, a large buy can spike the price you pay and a large sell can crash the price you receive. Review the quoted amount and price impact before you confirm, and never assume you can exit at the price you entered.</p></div>
-</details>
-<details class="sec reveal" id="fees" open="">
-<summary><h2>Fees &amp; costs</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body"><p>Trading costs are <strong>Solana network fees</strong> plus the platform's <strong>trading fee</strong> charged on each buy and sell, and creating a token costs a small amount of SOL. Solana fees are low, but the trading fee and price impact matter far more on small, fast-moving tokens.</p><p>Keep a small SOL balance set aside purely for fees, separate from what you intend to trade. Compare the token amount and price impact the curve quotes against your input before confirming any transaction.</p></div>
-</details>
-<details class="sec reveal" id="risks" open="">
-<summary><h2>Risks &amp; scams</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body">
-<p>Memecoins are among the riskiest things in crypto. Read both notices below before you spend anything.</p>
-<details class="notice" open="">
-<summary><span class="n-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 9v4M12 17h.01M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg></span><span class="n-title">Most memecoins lose value — expect to lose your stake</span><span class="chev-w" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="n-body">Memecoins are extremely volatile and speculative, and <strong>most lose most or all of their value</strong>. There are no guaranteed returns and no floor under the price. Rug pulls, insider selling, coordinated pumps and bots are widespread. Treat any amount you put in as money you can afford to lose entirely. <strong>Not financial advice.</strong></div>
-</details>
-<details class="notice">
-<summary><span class="n-ico" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/></svg></span><span class="n-title">Avoid scams — you never "claim" free tokens by connecting</span><span class="chev-w" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="n-body">Connecting a wallet does <strong>not</strong> grant free tokens. Any site promising free, guaranteed or airdropped pump.fun tokens for connecting or approving is almost certainly a <a href="https://consumer.ftc.gov/articles/how-recognize-avoid-phishing-scams" rel="noopener noreferrer nofollow" target="_blank">phishing scam</a>. Verify you are on the real app, never sign a transaction you do not understand, and reject requests for unlimited token approvals.</div>
-</details>
-</div>
-</details>
-<details class="sec reveal" id="trouble" open="">
-<summary><h2>Common problems</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body"><p>Most issues trace to missing SOL, a moving curve price, or connecting to the wrong site.</p><ul><li><strong>No SOL for fees:</strong> keep a small SOL balance separate from your trading amount.</li><li><strong>Transaction failed:</strong> Solana congestion or a moved curve price can cause failures — retry with a fresh quote.</li><li><strong>Received fewer tokens than expected:</strong> price impact on a thin curve; reduce your buy size.</li><li><strong>Cannot sell at your target:</strong> a falling curve or low liquidity limits exit — there is no guaranteed exit price.</li><li><strong>Wrong or fake site:</strong> confirm the real app and reject unexpected approval prompts.</li></ul></div>
-</details>
-<details class="sec reveal" id="faq" open="">
-<summary><h2>Pumpfun FAQ</h2><span class="chev" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary>
-<div class="sec-body">
-<details class="qa"><summary>What is pump.fun, and is this the official site?<span class="chev-q" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="a"><p>Pump.fun is a platform on Solana for launching and trading memecoins on bonding curves. This page is an independent, informational resource and is not affiliated with or endorsed by pump.fun; any launching or trading happens in the external app.</p></div></details>
-<details class="qa"><summary>How does a pump.fun bonding curve work?<span class="chev-q" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="a"><p>Each token is priced by a bonding curve: a formula that rises as more supply is bought and falls as it is sold, with no order book or presale. When the market cap reaches a set threshold, liquidity migrates to a decentralized exchange for open trading.</p></div></details>
-<details class="qa"><summary>How do I launch a token on pump.fun?<span class="chev-q" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="a"><p>Connect a Solana wallet, set a name, ticker and image, and deploy for a small fee in SOL. The token launches on a bonding curve with no presale, and anyone can then buy or sell against the curve.</p></div></details>
-<details class="qa"><summary>What does trading on pump.fun cost?<span class="chev-q" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="a"><p>Solana network fees plus the platform's trading fee on each buy and sell, and a small SOL cost to create a token. Price impact on a thin curve can be large, so review the quote first.</p></div></details>
-<details class="qa"><summary>Are pump.fun memecoins a good investment?<span class="chev-q" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="a"><p>No memecoin is a safe or guaranteed investment. They are extremely volatile, most lose most of their value, and rug pulls and scams are common. Only risk what you can afford to lose. Not financial advice.</p></div></details>
-<details class="qa"><summary>Do I claim free tokens by connecting a wallet?<span class="chev-q" aria-hidden="true"><svg fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></span></summary><div class="a"><p>No. Connecting a wallet does not grant free tokens. Any site promising free or guaranteed pump.fun tokens for connecting is almost certainly a scam. Buying always happens against the curve and costs SOL plus fees.</p></div></details>
-</div>
-</details>
-<section class="field-notes reveal" id="notes">
-<h2>Notes before you trade</h2>
-<div class="fn-body"><strong>Assume you can lose everything.</strong> Memecoins are speculative and most go to near zero, so only ever use money you can afford to lose. <strong>Before you spend:</strong><ul><li>Confirm you are on the real app and using your own Solana wallet.</li><li>Keep a small SOL balance for fees, separate from your trade.</li><li>Read the quoted amount and price impact; there is no guaranteed exit price.</li><li>Never expect free "claimable" tokens for connecting — that is a scam pattern.</li></ul>Independent resource — not affiliated with or endorsed by pump.fun. Not financial advice.</div>
-</section>
-</div>
-</div>
-</div>
-</main>
-<footer class="site-foot"><div class="wrap">Pumpfun App — independent guide to launching and trading memecoins on pump.fun. Not affiliated with or endorsed by pump.fun. Memecoins are extremely risky. Not financial advice. · <a href="dashboard/">Open Pumpfun App ↗</a> · © 2026</div></footer>
+<footer class="c8c832e">
+  <div class="c3c3a14 cb669c3">
+    <span class="c33df94">The guide</span>
+    <p class="cab4390">Last updated <span>Updated Oct 09, 2026</span></p>
+  </div>
+</footer>
 <script>
-(function(){
-  "use strict";
-  document.documentElement.classList.add("js");
-  var $=function(id){return document.getElementById(id);};
-  var SIGNALS=[{"t":"price","id":"sig-sol","cg":"solana","chg":true}];
-  (function(){var S=SIGNALS;if(!S||!S.length)return;function el(id){return document.getElementById(id);}function hide(id){var e=el(id);if(e){var t=e.closest(".tick");if(t)t.style.display="none";}}function set(id,x){var e=el(id);if(e)e.textContent=x;}function usd(n){n=Number(n);return "$"+n.toLocaleString("en-US",{maximumFractionDigits:n<1?4:2});}function jf(u){return fetch(u).then(function(r){if(!r.ok)throw 0;return r.json();});}var ids=S.map(function(s){return s.cg;}).join(",");jf("https://api.coingecko.com/api/v3/simple/price?ids="+ids+"&vs_currencies=usd&include_24hr_change=true").then(function(v){S.forEach(function(s){var d=v[s.cg];if(!d){hide(s.id);return;}if(isFinite(d.usd)){var x=usd(d.usd);if(s.chg&&isFinite(d.usd_24h_change)){var c=d.usd_24h_change;x+=" "+(c>=0?"▲":"▼")+Math.abs(c).toFixed(1)+"%";}set(s.id,x);}else hide(s.id);});}).catch(function(){S.forEach(function(s){hide(s.id);});});})();
-  var swap=$("route-swap");
-  if(swap)swap.addEventListener("click",function(){var from=$("leg-from"),to=$("leg-to");if(from&&to){var fa=from.querySelector(".asset"),ta=to.querySelector(".asset");var tmp=fa.innerHTML;fa.innerHTML=ta.innerHTML;ta.innerHTML=tmp;}var name=$("route-name");if(name)name.textContent=(name.textContent==="SOL → New token")?"New token → SOL":"SOL → New token";});
-  Array.prototype.forEach.call(document.querySelectorAll("details"),function(d){var s=d.querySelector("summary");if(!s)return;s.setAttribute("aria-expanded",d.open?"true":"false");d.addEventListener("toggle",function(){s.setAttribute("aria-expanded",d.open?"true":"false");});});
-  Array.prototype.forEach.call(document.querySelectorAll('.asset[role="button"]'),function(b){b.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();if(swap)swap.click();}});});
-  var reveals=document.querySelectorAll(".reveal");var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(reveals.length&&"IntersectionObserver" in window&&!reduce){var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});},{rootMargin:"0px 0px -8% 0px",threshold:0.08});reveals.forEach(function(el){io.observe(el);});}else{reveals.forEach(function(el){el.classList.add("in");});}
-  function openHash(){var id=location.hash.slice(1);if(!id)return;var el=document.getElementById(id);if(el&&el.tagName==="DETAILS"){el.open=true;el.classList.add("in");}}
-  window.addEventListener("hashchange",openHash);openHash();
-  document.addEventListener("click",function(e){var a=e.target.closest('a[href^="#"]');if(!a)return;var el=document.getElementById(a.getAttribute("href").slice(1));if(el&&el.tagName==="DETAILS"){el.open=true;el.classList.add("in");}});
+(() => {
+  const toc = document.getElementById('toc-list');
+  const sections = Array.from(document.querySelectorAll('#guide-sections .c63cdf4'));
+  const fallback = toc.querySelector('[data-sections-link]');
+  const fragment = document.createDocumentFragment();
+  sections.forEach((section, index) => {
+    if (!section.id) {
+      const base = `guide-section-${index + 1}`;
+      let id = base;
+      let suffix = 1;
+      while (document.getElementById(id)) id = `${base}-${suffix++}`;
+      section.id = id;
+    }
+    const heading = section.querySelector('.cd3b07b, h2, h3');
+    const item = document.createElement('li');
+    const link = document.createElement('a');
+    link.className = 'toc-link';
+    link.href = `#${encodeURIComponent(section.id)}`;
+    link.textContent = heading?.textContent.trim() || section.getAttribute('aria-label') || `Section ${index + 1}`;
+    item.append(link);
+    fragment.append(item);
+  });
+  if (sections.length) fallback.parentElement.replaceWith(fragment);
+  const entries = Array.from(toc.querySelectorAll('a[href^="#"]')).map(link => {
+    const target = document.getElementById(decodeURIComponent(link.hash.slice(1)));
+    return { link, target };
+  }).filter(entry => entry.target);
+  if (!entries.length) return;
+  let activeLink;
+  let pending = false;
+  const activate = entry => {
+    if (!entry || entry.link === activeLink) return;
+    if (activeLink) activeLink.removeAttribute('aria-current');
+    entry.link.setAttribute('aria-current', 'location');
+    activeLink = entry.link;
+  };
+  const update = () => {
+    pending = false;
+    const boundary = Math.min(180, window.innerHeight * .25);
+    let active = entries[0];
+    for (const entry of entries) {
+      if (entry.target.getBoundingClientRect().top <= boundary) active = entry;
+    }
+    const root = document.scrollingElement || document.documentElement;
+    if (root.scrollHeight > window.innerHeight && Math.ceil(window.scrollY + window.innerHeight) >= root.scrollHeight - 2) {
+      active = entries[entries.length - 1];
+    }
+    activate(active);
+  };
+  const schedule = () => {
+    if (pending) return;
+    pending = true;
+    window.requestAnimationFrame(update);
+  };
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(schedule, {
+      rootMargin: '-12% 0px -60% 0px',
+      threshold: [0, .1, .5, 1]
+    });
+    entries.forEach(entry => observer.observe(entry.target));
+  }
+  toc.addEventListener('click', event => {
+    const link = event.target.closest('a');
+    if (!link || event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const entry = entries.find(item => item.link === link);
+    if (!entry) return;
+    event.preventDefault();
+    const hadTabindex = entry.target.hasAttribute('tabindex');
+    if (!hadTabindex) {
+      entry.target.setAttribute('tabindex', '-1');
+      entry.target.addEventListener('blur', () => entry.target.removeAttribute('tabindex'), { once: true });
+    }
+    entry.target.focus({ preventScroll: true });
+    entry.target.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+      block: 'start'
+    });
+    if (window.location.hash !== link.hash) {
+      try { window.history.pushState(null, '', link.hash); } catch {}
+    }
+    activate(entry);
+  });
+  window.addEventListener('scroll', schedule, { passive: true });
+  window.addEventListener('resize', schedule, { passive: true });
+  window.addEventListener('hashchange', schedule);
+  window.addEventListener('load', schedule, { once: true });
+  update();
 })();
-(function(){var links=[].slice.call(document.querySelectorAll(".toc a"));if(!links.length)return;var secs=[].slice.call(document.querySelectorAll(".doc-main [id]")).filter(function(s){return document.querySelector('.toc a[href="#'+s.id+'"]');});if(!secs.length)return;function setA(id){links.forEach(function(a){a.classList.toggle("active",a.getAttribute("href")==="#"+id);});}function up(){var cur=secs[0];for(var i=0;i<secs.length;i++){if(secs[i].getBoundingClientRect().top-120<=0)cur=secs[i];else break;}if(window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)cur=secs[secs.length-1];if(cur)setA(cur.id);}window.addEventListener("scroll",up,{passive:true});window.addEventListener("resize",up);up();})();
 </script>
 </body>
 </html>
