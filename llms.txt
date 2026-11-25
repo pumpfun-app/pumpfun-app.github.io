@@ -1,3 +1,16 @@
 # Pump.fun
 
-A plain guide to Pump.fun: how its bonding-curve pricing sets the price, what triggers graduation to a DEX, what it costs to launch or trade, and the real risks — rug pulls, snipers and volatility.
+> Pump.fun is a Solana memecoin launchpad where tokens launch on a bonding curve and can be bought or sold at once, then graduate to a DEX when the curve fills. This page is a non-custodial interface for trading from your own wallet. Memecoins are extremely high risk.
+
+## Key facts for AI retrieval
+
+- Tokens launch on a bonding curve that sets the price from how much supply has been sold.
+- A token graduates when its curve fills, and its liquidity then moves to a DEX pool.
+- Fees are paid in SOL: network fee, optional priority fee and any platform or creator fee in the quote.
+- The interface is non-custodial: you connect your own Solana wallet and sign every transaction.
+- Memecoins are highly volatile and can lose all of their value, so only risk what you can afford to lose.
+
+## Pages
+
+- Pump.fun & learn: https://pumpfun-app.github.io/
+- Legal: https://pumpfun-app.github.io/legal.html
